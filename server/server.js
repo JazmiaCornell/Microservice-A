@@ -54,11 +54,16 @@ router.post('/receipt', async (req, res) => {
     console.log(`Address: ${street}, ${city}, ${state}, ${postalCode}`);
 
     const htmlContent = `
-        <h2>Receipt Confirmation</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Amount:</strong> $${amount}</p>
-        <p><strong>Category:</strong> ${category}</p>
-        <p><strong>Address:</strong> ${street}, ${city}, ${state} ${postalCode}</p>
+    <div style="max-width: 600px; margin: auto; padding: 20px; font-family: Arial, sans-serif; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;">
+        <h2 style="text-align: center; color: #333;">Receipt Confirmation</h2>
+        <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+        <p style="font-size: 16px; color: #555;"><strong>Name:</strong> ${name}</p>
+        <p style="font-size: 16px; color: #555;"><strong>Amount:</strong> <span style="color: #2a9d8f;">$${amount}</span></p>
+        <p style="font-size: 16px; color: #555;"><strong>Category:</strong> ${category}</p>
+        <p style="font-size: 16px; color: #555;"><strong>Address:</strong><br> ${street},<br> ${city}, ${state} ${postalCode}</p>
+        <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+        <p style="text-align: center; font-size: 14px; color: #aaa;">Thank you for your submission!</p>
+    </div>
     `;
 
     const result = await sendEmail(email, name, htmlContent);
