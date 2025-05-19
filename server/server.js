@@ -69,7 +69,7 @@ router.post('/receipt', async (req, res) => {
     const result = await sendEmail(email, name, htmlContent);
 
     if (!result.success) {
-        return res.status(500).json({ error: 'Failed to send email', details: result.error });
+        return res.status(500).json({ error: 'Failed to send email' });
     }
 
     res.status(200).json({ message: 'Receipt generated and sent to email' });

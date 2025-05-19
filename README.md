@@ -1,12 +1,27 @@
-# React + Vite
+# Communication Contract
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Requesting data from Microservice A
 
-Currently, two official plugins are available:
+To request data from Microservice A, use an HTTP POST request on port 5013. The request body must include JSON with the following form data: name, email, amount, category, street, city, state, postalCode
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+const res = await fetch('http://localhost:5013/receipt', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+});
+```
 
-## Expanding the ESLint configuration
+### Receiving data from Microservice A
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Microservice A will send an email and return a success or failure message. The returned data will be in the form of a JSON with the following elements: message and error. This message can displayed in anyway that is desired, such as an alert or an HTML element on the DOM.
+
+```
+const result = await res.json();
+```
+
+### UML Diagram
+
+![alt text](image.png)
