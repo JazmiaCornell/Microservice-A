@@ -11,16 +11,20 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins, // 👈 allow array directly
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-    credentials: true,
-  })
-);
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+  }
 
-app.options("*", cors()); // preflight
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 
 // Body parsers
 app.use(express.json());
