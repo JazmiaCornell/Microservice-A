@@ -9,7 +9,10 @@ const PORT = 5013;
 
 app.use(
   cors({
-    origin: CORS_ORIGIN,
+    origin: [
+      "https://microservicesproject-production.up.railway.app",
+      "http://localhost:3000",
+    ],
     methods: ["GET", "POST"],
 
     credentials: true,
