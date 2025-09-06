@@ -9,7 +9,9 @@ const PORT = 5013;
 
 app.use(
   cors({
-    origin: CORS_ORIGIN,
+    origin: ["https://localhost:3000", CORS_ORIGIN],
+    methods: ["GET", "POST"],
+
     credentials: true,
   })
 );

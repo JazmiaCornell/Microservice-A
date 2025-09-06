@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function App() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    amount: '',
-    category: '',
-    street: '',
-    city: '',
-    state: '',
-    postalCode: '',
+    name: "",
+    email: "",
+    amount: "",
+    category: "",
+    street: "",
+    city: "",
+    state: "",
+    postalCode: "",
   });
 
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
@@ -21,13 +21,16 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('http://localhost:5013/receipt', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
+    const res = await fetch(
+      "https://microservice-a-production.up.railway.app/receipt",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
 
     const result = await res.json();
     alert(result.message || result.error);
@@ -41,7 +44,7 @@ function App() {
           <div key={key}>
             <label htmlFor={key}>{key[0].toUpperCase() + key.slice(1)}:</label>
             <input
-              type={key === 'amount' ? 'number' : 'text'}
+              type={key === "amount" ? "number" : "text"}
               id={key}
               name={key}
               value={value}
