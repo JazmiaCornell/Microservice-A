@@ -6,30 +6,21 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5013;
 
-// Allowed origins for CORS
 const allowedOrigins = [
   "https://microservicesproject-production.up.railway.app",
   "http://localhost:3000",
 ];
 
-// ✅ CORS middleware
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman / curl
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"), false);
-    },
+    origin: allowedOrigins, // 👈 allow array directly
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
     credentials: true,
   })
 );
 
-// ✅ Preflight requests
-app.options("*", cors());
+app.options("*", cors()); // preflight
 
 // Body parsers
 app.use(express.json());
