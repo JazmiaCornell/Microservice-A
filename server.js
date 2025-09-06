@@ -4,25 +4,36 @@ const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
 
-const CORS_ORIGIN = process.env.CORS_ORIGIN;
-const PORT = 5013;
+const PORT = process.env.PORT || 5013;
 
+// Allowed origins for CORS
+const allowedOrigins = [
+  "https://microservicesproject-production.up.railway.app",
+  "http://localhost:3000",
+];
+
+// CORS middleware
 app.use(
   cors({
-    origin: [
-      "https://microservicesproject-production.up.railway.app",
-      "http://localhost:3000",
-    ],
-    methods: ["GET", "POST"],
-
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        return callback(new Error("Not allowed by CORS"), false);
+      }
+      return callback(null, true);
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
     credentials: true,
   })
 );
 
+// Handle preflight OPTIONS requests
+app.options("*", cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const router = express.Router();
 
 // Nodemailer setup
 const transporter = nodemailer.createTransport({
@@ -33,15 +44,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// fucnction to send an email using nodemailer
+// Function to send email
 async function sendEmail(email, name, html) {
   try {
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: `Receipt Confirmation for ${name}`,
-      text: `Receipt for ${name}`, // Optional plain text
-      html: html,
+      text: `Receipt for ${name}`,
+      html,
     });
     return { success: true };
   } catch (err) {
@@ -50,8 +61,8 @@ async function sendEmail(email, name, html) {
   }
 }
 
-// route to be called to generate receipy
-router.post("/receipt", async (req, res) => {
+// Receipt route
+app.post("/receipt", async (req, res) => {
   const { name, email, amount, category, street, city, state, postalCode } =
     req.body;
 
@@ -82,7 +93,7 @@ router.post("/receipt", async (req, res) => {
         <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
         <p style="text-align: center; font-size: 14px; color: #aaa;">Thank you for your submission!</p>
     </div>
-    `;
+  `;
 
   const result = await sendEmail(email, name, htmlContent);
 
