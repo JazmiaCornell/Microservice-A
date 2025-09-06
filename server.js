@@ -4,6 +4,9 @@ const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
 
+const CORS_ORIGIN = process.env.CORS_ORIGIN;
+const PORT = 5013;
+
 app.use(
   cors({
     origin: CORS_ORIGIN,
@@ -13,7 +16,6 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const PORT = 5013;
 
 const router = express.Router();
 
