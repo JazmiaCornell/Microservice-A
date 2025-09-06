@@ -104,8 +104,6 @@ app.post("/receipt", async (req, res) => {
   res.status(200).json({ message: "Receipt generated and sent to email" });
 });
 
-app.use("/", router);
-
 app.listen(PORT, () => {
   console.log(`Microservice-A Server is running on port ${PORT}`);
 });
