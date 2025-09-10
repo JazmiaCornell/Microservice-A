@@ -6,15 +6,28 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5013;
 
-// --- Allow CORS from anywhere for testing ---
+// --- CORS config ---
+const allowedOrigins = [
+  "https://microservicesproject-production.up.railway.app",
+  "https://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: "*", // allow all origins
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        return callback(new Error("Not allowed by CORS"));
+      }
+      return callback(null, true);
+    },
     methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
+// handles all preflight options
 app.options("*", cors());
 
 // --- Body parsers ---
